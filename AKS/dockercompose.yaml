@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  py_web_demo:
+    build: ./
+    image: py_web_demo:0.1 
+    ports:
+      - "84:8080"
+    expose:
+      - "84"
+    volumes:
+      - myvol:/app/data
+    
+    deploy:
+      mode: replicated
+      replicas: 6
+
+volumes:
+  myvol:
+    external: true

@@ -1,0 +1,3 @@
+use Emp
+db.emp.find();
+db.emp.find({"name":"sam"})
