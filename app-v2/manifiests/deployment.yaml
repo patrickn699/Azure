@@ -1,0 +1,80 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: frontend
+  labels:
+    name: fe-namespace
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-app-v2-deployment
+  namespace: frontend
+  labels:
+    app: backend-v2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend-v2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      name: py_k8_v2
+      labels:
+        app: backend-v2
+    spec:
+      containers:
+      - name: py-app-v2
+        image: patrick699/py_k8s_v2:0.1 #py_k8:0.5
+        ports:
+         - containerPort: 5000
+
+        envFrom:
+          - configMapRef:
+              name: fe-config
+        env:
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret  # Name of the Secret
+                key: MYSQL_PASSWORD
+
+        volumeMounts:
+          - mountPath: "var/tmp/flask_basic/files" #"/files"
+            name: generic-pv-v2
+
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+
+      volumes:
+        - name: generic-pv-v2
+          persistentVolumeClaim:
+            claimName: generic-pvc-v2
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lb-svc-v2
+  namespace: frontend
+  labels:
+    lb: frontend-v2
+spec:
+  selector:
+    app: backend-v2
+  ports:
+    - port: 8500
+      targetPort: 5000
+  type: LoadBalancer

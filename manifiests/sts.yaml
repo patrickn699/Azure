@@ -1,0 +1,80 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: db
+  labels:
+    name: db-namespace
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: db
+spec:
+  serviceName: "mysql-svc"
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: "mysql"
+
+  template:
+    metadata:
+      labels:
+        app: mysql
+
+    spec:
+      containers:
+        - name: mysql-db
+          image: mysql:5.7
+          env:
+            - name: MYSQL_USER
+              value: "mysqladmin"
+            - name: MYSQL_DATABASE
+              value: "flask_db"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret        # Name of the Secret
+                  key: MYSQL_PASSWORD
+
+
+          ports:
+            - containerPort: 3306
+
+
+          volumeMounts:
+            - name: mysql-storage
+              mountPath: /var/lib/mysql
+
+
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-storage  # Name of the volume claim template
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+  namespace: db
+type: Opaque
+data:
+  MYSQL_PASSWORD: cm9vdHBhc3N3b3Jk  # base64-encoded "rootpassword"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-svc
+  namespace: db
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql
+  clusterIP: None  # Required for StatefulSet

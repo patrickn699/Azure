@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #4caf50; /* Default color for success */
+            margin-bottom: 10px;
+        }
+
+        .error h1 {
+            color: #e74c3c; /* Error color */
+        }
+
+        .info h1 {
+            color: #3498db; /* Info color */
+        }
+
+        p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+
+        .data-container {
+            margin-top: 20px;
+            text-align: left;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .data-container ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .data-container li {
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #ddd;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .data-container li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+        }
+
+        a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1em;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #007bff;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container {{ message_type }}">
+        <h1>{{ title }}</h1>
+        <p>{{ message }}</p>
+
+        {% if data %}
+            <div class="data-container">
+                <p><strong>Additional Information:</strong></p>
+                <ul>
+                    {% for key, value in data.items() %}
+                        <li><strong>{{ key }}:</strong> {{ value }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <a href="{{ url_for('home') }}">Return to Home Page</a>
+    </div>
+</body>
+</html>

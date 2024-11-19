@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+</head>
+<body>
+    <h1>Welcome to the Home Page!</h1>
+    <p>This is the main page of the Flask web app.</p>
+    <a href="{{ url_for('about') }}">Go to About Page</a>
+
+    <h2>Environment Variables</h2>
+    <ul>
+        <li><strong>App Mode:</strong> {{ app_mode }}</li>
+        <li><strong>Database URL:</strong> {{ database_url }}</li>
+        <li><strong>API Key:</strong> {{ api_key }}</li>
+        <li><strong>MYSQL HOST:</strong> {{ mysql_host }}</li>
+        <li><strong>MYSQL USER:</strong> {{ mysql_user }}</li>
+        <li><strong>MYSQL DB:</strong> {{ mysql_db }}</li>
+        <li><strong>MYSQL PASS:</strong> {{ mysql_pass }}</li>
+    </ul>
+
+
+    <h2>Update Content</h2>
+    <form action="/update" method="post">
+        <textarea name="content" rows="4" cols="50">{{ content }}</textarea><br><br>
+        <input type="submit" value="Update Content">
+    </form>
+    
+</body>
+</html>
