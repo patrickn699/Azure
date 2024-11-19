@@ -1,0 +1,9 @@
+kubectl run mysql-client --rm -it --image=mysql:latest --namespace=db -- mysql -h "mysql-0.mysql-svc.db.svc.cluster.local" -u root -p  'cm9vdHBhc3N3b3Jk' kubectl run mysql-client --rm -it --image=mysql:latest --namespace=db -- mysql -h "mysql-0.mysql-svc.db.svc.cluster.local" -u root -p  'cm9vdHBhc3N3b3Jk' -e 'SHOW databases;'
+
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'10.1.0.95' IDENTIFIED BY 'rootpassword' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'rootpassword' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
